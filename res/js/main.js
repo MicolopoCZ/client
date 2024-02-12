@@ -17,14 +17,16 @@ document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
+let mouse = {
+  x: 0,
+  y: 0
+}
+
 document.addEventListener("click", (e) => {
   const canvasPos = canvas.getBoundingClientRect();
-  console.log(
-    ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width
-    );
-  console.log(
-    ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height
-    );
+  mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
+  mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
+  console.log(mouse);
 });
 
 const gameLoop = () => {
