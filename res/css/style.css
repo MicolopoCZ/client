@@ -1,6 +1,6 @@
 
 html, body {
-    /*cursor: none;*/
+    cursor: url("../img/ui/cursor.png"), auto;
     overflow: hidden;
     margin: 0;
     display: flex;
