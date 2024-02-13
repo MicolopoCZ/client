@@ -18,3 +18,28 @@ export class Background {
     ctx.drawImage(this.img, this.position.x, this.position.y, this.size.width, this.size.height);
   }
 }
+
+export class Click {
+  
+  constructor () {
+    this.width = 20;
+    this.height = 20;
+    this.x =0;
+    this.y =0;
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = "red";
+    ctx.fillRect(this.x -10, this.y -10, 20, 20);
+  }
+
+  update(x, y) {
+    this.x = x;
+    this.y = y;
+    this.reset();
+  }
+
+  reset() {
+
+  }
+}

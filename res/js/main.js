@@ -1,8 +1,9 @@
-import { Background } from "./ui/basic-utils.js";
+import { Background, Click } from "./ui/basic-utils.js";
 import { Player } from "./player.js";
 
 const background = new Background();
 const player = new Player(245, 4060);
+const click = new Click();
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -26,7 +27,7 @@ document.addEventListener("click", (e) => {
   const canvasPos = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
   mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
-  console.log(mouse);
+  click.update(mouse.x, mouse.y);
 });
 
 const gameLoop = () => {
@@ -47,10 +48,8 @@ const gameLoop = () => {
 
   window.requestAnimationFrame(gameLoop);
 };
-
 const clear = () => {
   background.draw(ctx, player);
-  player.draw(ctx);
 };
 const resize = () => {
   canvas.width = 1280;
@@ -75,11 +74,16 @@ const handlePlayerMovement = () => {
   if (keys["KeyD"]) {
     player.x += player.velocity;
   }
-}
+};
 
-const render = () => {};
+const render = () => {
+  player.draw(ctx);
+  // render click
+  click.draw(ctx);
+};
 const fps = () => {};
 
 window.onload = () => {
   window.requestAnimationFrame(gameLoop);
+  document.body.oncontextmenu = () => false;
 };
