@@ -24,13 +24,17 @@ export class Click {
   constructor () {
     this.width = 20;
     this.height = 20;
-    this.x =0;
-    this.y =0;
+    this.x = 0;
+    this.y = 0;
+    this.canDraw = false;
+    this.counter = 0;
   }
 
   draw(ctx) {
+    if (this.counter>=25) return;
     ctx.fillStyle = "red";
     ctx.fillRect(this.x -10, this.y -10, 20, 20);
+    this.counter++;
   }
 
   update(x, y) {
@@ -40,6 +44,6 @@ export class Click {
   }
 
   reset() {
-
+    this.counter = 0;
   }
 }

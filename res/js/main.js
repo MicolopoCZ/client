@@ -22,8 +22,13 @@ let mouse = {
   x: 0,
   y: 0
 }
-
 document.addEventListener("click", (e) => {
+  const canvasPos = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
+  mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
+});
+
+document.addEventListener("contextmenu", (e) => {
   const canvasPos = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
   mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
