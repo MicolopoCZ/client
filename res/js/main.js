@@ -1,9 +1,52 @@
 import { Background, Click } from "./ui/basic-utils.js";
 import { Player } from "./player.js";
 
+const playerId = Math.floor(Math.random() * 1000000);
+const socket = io("http://localhost:3000");
+
+const sendSpawnInfoToServer = () => {
+  const payload = {
+    id: playerId,
+    position: {
+      x: player.x,
+      y: player.y,
+    },
+  };
+  socket.emit("spawn", payload);
+};
+
+const users = new Map();
+
+socket.on("new user connected", (data) => {
+  data.map((element) => {
+    users.set(element[0], element[1]);
+  });
+  console.log(users);
+});
+
+socket.on("user has left the game", (user) => {
+  users.delete(user);
+  console.log(users);
+});
+
+const sendPlayerUpdate = () => {
+  const payload = {
+    id: playerId,
+    position: {
+      x: player.x,
+      y: player.y,
+    },
+  };
+  socket.emit("playerpos", payload);
+};
+
+socket.on("playerpos", (data) => {
+  if (data.id == playerId) return;
+  users.set(data.id, data.position);
+});
+
 const background = new Background();
 const player = new Player(245, 4060);
-const click = new Click();
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -17,7 +60,6 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
-
 let mouse = {
   x: 0,
   y: 0
@@ -26,13 +68,6 @@ document.addEventListener("click", (e) => {
   const canvasPos = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
   mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
-});
-
-document.addEventListener("contextmenu", (e) => {
-  const canvasPos = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - canvasPos.left) / canvasPos.width) * canvas.width;
-  mouse.y = ((e.clientY - canvasPos.top) / canvasPos.height) * canvas.height;
-  click.update(mouse.x, mouse.y);
 });
 
 const gameLoop = () => {
@@ -62,6 +97,7 @@ const resize = () => {
 };
 const update = () => {
   handlePlayerMovement();
+  sendPlayerUpdate();
 };
 
 const handlePlayerMovement = () => {
@@ -81,14 +117,10 @@ const handlePlayerMovement = () => {
   }
 };
 
-const render = () => {
-  player.draw(ctx);
-  // render click
-  click.draw(ctx);
-};
+const render = () => {};
 const fps = () => {};
 
 window.onload = () => {
+  sendSpawnInfoToServer();
   window.requestAnimationFrame(gameLoop);
-  document.body.oncontextmenu = () => false;
 };
