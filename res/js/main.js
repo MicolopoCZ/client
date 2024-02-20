@@ -1,9 +1,9 @@
+
 import { Background, Click } from "./ui/basic-utils.js";
 import { Player } from "./player.js";
 
 const playerId = Math.floor(Math.random() * 1000000);
 const socket = io("http://localhost:3000");
-
 const sendSpawnInfoToServer = () => {
   const payload = {
     id: playerId,
@@ -24,7 +24,7 @@ socket.on("new user connected", (data) => {
   console.log(users);
 });
 
-socket.on("user has left the game", (user) => {
+socket.on("user disconnected", (user) => {
   users.delete(user);
   console.log(users);
 });
@@ -90,6 +90,7 @@ const gameLoop = () => {
 };
 const clear = () => {
   background.draw(ctx, player);
+  player.draw(ctx);
 };
 const resize = () => {
   canvas.width = 1280;
@@ -117,7 +118,20 @@ const handlePlayerMovement = () => {
   }
 };
 
-const render = () => {};
+const render = () => {
+  users.forEach((p, id) => {
+    if (playerId == id) return;
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(
+      p.x-player.x + 1280 / 2 - player.width / 2,
+      p.y-player.y + 720 / 2 - player.height / 2,
+      50,
+      50
+      );
+    console.log(p);
+  });
+};
+
 const fps = () => {};
 
 window.onload = () => {
